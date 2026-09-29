@@ -22,17 +22,21 @@ class Settings(BaseSettings):
         description="API key for Groq LLM inference (Llama 3 / Mixtral)"
     )
 
-    # ── Database ──────────────────────────────────────────────
-    DATABASE_URL: str = Field(
-        default="sqlite:///data/discovery.db",
-        description="SQLAlchemy database URL"
+    # ── Storage ──────────────────────────────────────────────
+    DATA_DIR: str = Field(
+        default="data",
+        description="Base directory for local data storage"
     )
 
+    # ── Database ──────────────────────────────────────────────
+    @property
+    def DATABASE_URL(self) -> str:
+        return f"sqlite:///{self.DATA_DIR}/discovery.db"
+
     # ── Vector Store ──────────────────────────────────────────
-    CHROMA_PERSIST_DIR: str = Field(
-        default="data/chroma",
-        description="Directory for ChromaDB persistent storage"
-    )
+    @property
+    def CHROMA_PERSIST_DIR(self) -> str:
+        return f"{self.DATA_DIR}/chroma"
 
     # ── Optional: Source Adapter Credentials ──────────────────
     REDDIT_CLIENT_ID: Optional[str] = Field(
@@ -60,6 +64,10 @@ class Settings(BaseSettings):
     HOST: str = Field(default="0.0.0.0", description="Server host")
     PORT: int = Field(default=8000, description="Server port")
     DEBUG: bool = Field(default=True, description="Debug mode")
+    BACKEND_CORS_ORIGINS: str = Field(
+        default="http://localhost:5173",
+        description="Comma-separated list of allowed CORS origins"
+    )
 
     # ── Groq Model Config ─────────────────────────────────────
     GROQ_MODEL: str = Field(

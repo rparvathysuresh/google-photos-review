@@ -11,7 +11,8 @@ const ClusterGrid = () => {
   useEffect(() => {
     const fetchClusters = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/clusters/');
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
+        const response = await fetch(`${API_BASE_URL}/clusters/`);
         const data = await response.json();
         setClusters(data);
       } catch (err) {
@@ -76,9 +77,10 @@ const ClusterDetail = () => {
   useEffect(() => {
     const fetchDetail = async () => {
       try {
+        const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api';
         const [clusterRes, episodesRes] = await Promise.all([
-          fetch(`http://127.0.0.1:8000/api/clusters/${clusterId}`),
-          fetch(`http://127.0.0.1:8000/api/clusters/${clusterId}/episodes`)
+          fetch(`${API_BASE_URL}/clusters/${clusterId}`),
+          fetch(`${API_BASE_URL}/clusters/${clusterId}/episodes`)
         ]);
         setCluster(await clusterRes.json());
         setEpisodes(await episodesRes.json());
