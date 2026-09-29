@@ -1,0 +1,267 @@
+# Problem Statement: AI-Powered Photo Retrieval Discovery Engine
+
+## Overview
+
+The objective of this project is to build an **AI-powered discovery engine** that analyzes publicly available user feedback and conversations to understand how people retrieve old photos, videos, screenshots, documents, and other visual memories from large personal photo libraries.
+
+The challenge is not to improve photo search in general. Instead, the system should identify **where retrieval breaks down when users have incomplete memories**—for example, remembering a trip, person, object, or context but forgetting the exact date, location, album, filename, or search terms.
+
+The system should go beyond sentiment analysis or review summarization by converting real user feedback into **structured retrieval problems, recurring patterns, and evidence-backed opportunity areas**.
+
+---
+
+## Objective
+
+Design and implement a lightweight **RAG-based AI discovery engine** that:
+
+* Collects and analyzes public user feedback related to photo retrieval
+* Identifies what users **remember vs. forget**
+* Detects how users attempt to retrieve visual information
+* Identifies recurring retrieval failure patterns
+* Groups similar retrieval problems into **problem/opportunity areas**
+* Answers research questions using **source-backed evidence**
+
+---
+
+## Target Users
+
+* Product managers researching photo retrieval problems
+* UX researchers conducting qualitative discovery
+* Product/design teams exploring opportunities in photo organization and retrieval
+
+---
+
+## Scope of Work
+
+### 1. Data Collection
+
+Collect publicly available feedback/conversations from sources such as:
+
+* Reddit discussions
+* YouTube comments
+* Google Photos Community/support discussions
+* Google Play / App Store reviews where publicly accessible
+* Relevant forums and other public discussions
+
+The system should support **CSV/JSON upload** so pre-collected public data can also be analyzed.
+
+---
+
+### 2. AI Discovery Pipeline
+
+The system should process each relevant feedback item and identify:
+
+**What the user is trying to find**
+
+* Photo
+* Screenshot
+* Document
+* Video
+* Photo of a person/object/etc.
+
+**What the user remembers**
+
+* Person
+* Location
+* Event/trip
+* Object
+* Approximate time
+* Activity
+* Visual appearance
+* Text/content
+* Context
+
+**What the user has forgotten**
+
+* Exact date
+* Exact location
+* Album
+* Filename
+* Person/object name
+* Exact words/search terms
+
+**How the user tries to retrieve it**
+
+* Keyword search
+* Timeline browsing
+* Albums
+* Scrolling
+* Face/person search
+* Visual scanning
+* Other workarounds
+
+**Why retrieval fails**
+
+* Cannot formulate the right search query
+* Too many results
+* Forgotten date/location
+* Context does not translate into keywords
+* Difficulty describing a visual memory
+* Uncertainty between similar results
+
+---
+
+### 3. Retrieval Episode + RAG
+
+Convert relevant feedback into structured **Retrieval Episodes** containing:
+
+* User goal
+* Remembered clues
+* Forgotten information
+* Retrieval attempt
+* Failure reason
+* Memory type
+* Desired outcome
+* Original source and URL
+* Supporting evidence excerpt
+
+Store the raw feedback and structured episodes in a searchable/vector database.
+
+The RAG system should answer questions such as:
+
+* What kinds of old photos do users struggle to retrieve?
+* What information do users remember most often?
+* What information do they commonly forget?
+* What retrieval workarounds do users use?
+* Which retrieval problems appear across multiple sources?
+* Show examples of users remembering an event but not the date.
+
+Every insight should be traceable to the underlying user evidence.
+
+---
+
+### 4. Problem & Opportunity Analysis
+
+The system should automatically identify and compare recurring retrieval problem areas.
+
+Example categories may include:
+
+* Event/trip-based retrieval
+* People/context retrieval
+* Visual-object retrieval
+* Screenshot/document retrieval
+* Location-based retrieval
+* Approximate-time retrieval
+* Text-inside-image retrieval
+
+For each problem area, show:
+
+* Number of relevant retrieval episodes
+* Common remembered clues
+* Common forgotten information
+* Current retrieval behaviour
+* Common failure patterns
+* Representative user evidence
+* Sources in which the pattern appears
+
+The system should present these as **discovery findings/opportunity areas**, not automatically prescribe a final product solution.
+
+---
+
+## User Interface
+
+Build a simple research interface with:
+
+### Discovery Dashboard
+
+* Total feedback analyzed
+* Relevant feedback
+* Retrieval episodes
+* Problem clusters
+* Source breakdown
+
+### Ask the Research Engine
+
+A conversational interface where users can ask questions about the collected evidence.
+
+### Problem Explorer
+
+Allows researchers to open a problem area and inspect its patterns and supporting user evidence.
+
+### Evidence Cards
+
+Each insight should show:
+
+* Source
+* Short excerpt
+* Date
+* Retrieval pattern
+* Original source link
+
+---
+
+## Constraints
+
+### Data & Evidence
+
+* Use publicly available user feedback
+* Preserve the original source and URL
+* Do not fabricate user quotes, statistics, or evidence
+* Clearly distinguish **direct evidence** from AI-generated interpretation
+* Avoid presenting findings from the collected dataset as representative of all Google Photos users
+
+### AI / RAG
+
+* Use RAG for evidence retrieval
+* Answers should be grounded in the collected dataset
+* If sufficient evidence is unavailable, explicitly state this
+* Avoid generic sentiment analysis as the primary output
+
+### Privacy
+
+* Do not intentionally collect or expose personally identifiable information
+* Store only information necessary for research and source attribution
+
+---
+
+## Expected Deliverables
+
+1. **Working AI Discovery Engine**
+
+   * Data ingestion
+   * AI extraction
+   * Retrieval Episodes
+   * Embeddings/vector search
+   * RAG Q&A
+   * Problem clustering
+   * Opportunity analysis
+
+2. **Minimal Research UI**
+
+   * Dashboard
+   * Chat/research interface
+   * Problem explorer
+   * Evidence cards
+
+3. **README**
+
+   * Setup instructions
+   * Architecture overview
+   * Data sources
+   * RAG approach
+   * AI extraction schema
+   * Known limitations
+
+---
+
+## Success Criteria
+
+The system should:
+
+* Reliably identify relevant photo-retrieval feedback
+* Distinguish what users remember from what they forget
+* Identify recurring retrieval failure patterns
+* Compare different retrieval problem areas using evidence
+* Answer research questions with source-backed responses
+* Allow every major finding to be traced back to real user feedback
+* Surface meaningful opportunity areas rather than merely summarizing reviews
+
+---
+
+## Summary
+
+The goal is to build an **evidence-driven AI discovery engine for photo retrieval** that transforms unstructured user conversations into:
+
+**User Feedback → Retrieval Episodes → Patterns → Problem Areas → Opportunity Insights**
+
+The system should help a product team understand **how people remember visual information and where existing retrieval breaks down when memory is incomplete**, before proposing a product solution.

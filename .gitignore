@@ -1,0 +1,52 @@
+# ──────────────────────────────────────────────
+# .gitignore
+# AI-Powered Photo Retrieval Discovery Engine
+# ──────────────────────────────────────────────
+
+# ── Environment ───────────────────────────────
+.env
+.env.local
+.env.production
+
+# ── Python ────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+
+# ── Node / Frontend ──────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.tsbuildinfo
+
+# ── Data & Storage ───────────────────────────
+data/raw/
+data/chroma/
+*.db
+*.sqlite
+*.sqlite3
+
+# ── IDE ──────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Logs ──────────────────────────────────────
+*.log
+logs/
+
+# ── OS ────────────────────────────────────────
+.DS_Store
+Desktop.ini
