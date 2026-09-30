@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     PORT: int = Field(default=8000, description="Server port")
     DEBUG: bool = Field(default=True, description="Debug mode")
     BACKEND_CORS_ORIGINS: str = Field(
-        default="http://localhost:5173",
+        default="*",
         description="Comma-separated list of allowed CORS origins"
     )
 
