@@ -2,8 +2,7 @@ import logging
 import numpy as np
 from typing import List, Dict, Any
 
-import umap
-from sklearn.cluster import HDBSCAN
+import sys
 
 from backend.db.vector_store import vector_store
 from backend.db.database import SessionLocal
@@ -15,22 +14,33 @@ class Clusterer:
     """Clustering pipeline using UMAP + HDBSCAN."""
     
     def __init__(self):
-        # Initialize UMAP
-        self.reducer = umap.UMAP(
-            n_components=5, 
-            n_neighbors=15, 
-            min_dist=0.1, 
-            metric='cosine', 
-            random_state=42
-        )
+        self._reducer = None
+        self._clusterer = None
+
+    @property
+    def reducer(self):
+        if self._reducer is None:
+            import umap
+            self._reducer = umap.UMAP(
+                n_components=5, 
+                n_neighbors=15, 
+                min_dist=0.1, 
+                metric='cosine', 
+                random_state=42
+            )
+        return self._reducer
         
-        # Initialize HDBSCAN
-        self.clusterer = HDBSCAN(
-            min_cluster_size=5,
-            min_samples=3,
-            metric='euclidean',
-            cluster_selection_epsilon=0.0
-        )
+    @property
+    def clusterer_model(self):
+        if self._clusterer is None:
+            from sklearn.cluster import HDBSCAN
+            self._clusterer = HDBSCAN(
+                min_cluster_size=5,
+                min_samples=3,
+                metric='euclidean',
+                cluster_selection_epsilon=0.0
+            )
+        return self._clusterer
 
     def run_clustering(self) -> Dict[str, Any]:
         """
@@ -63,7 +73,7 @@ class Clusterer:
         logger.info("Running HDBSCAN...")
         
         # 3. Clustering (HDBSCAN)
-        labels = self.clusterer.fit_predict(reduced_embeddings)
+        labels = self.clusterer_model.fit_predict(reduced_embeddings)
         
         # 4. Save cluster assignments to SQLite database
         logger.info("Saving cluster assignments to SQLite...")
