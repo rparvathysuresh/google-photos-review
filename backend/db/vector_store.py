@@ -14,27 +14,44 @@ class VectorStore:
     """Wrapper for ChromaDB operations."""
     
     def __init__(self):
+        self._client = None
+        self._feedback_collection = None
+        self._episode_collection = None
+
+    def _init_db(self):
+        if self._client is not None:
+            return
+            
         # Create persist directory if it doesn't exist
         os.makedirs(settings.CHROMA_PERSIST_DIR, exist_ok=True)
         
         # Initialize client
-        self.client = chromadb.PersistentClient(
+        self._client = chromadb.PersistentClient(
             path=settings.CHROMA_PERSIST_DIR,
             settings=Settings(anonymized_telemetry=False)
         )
         
         # Initialize collections
-        self.feedback_collection = self.client.get_or_create_collection(
+        self._feedback_collection = self._client.get_or_create_collection(
             name="feedback_embeddings",
             metadata={"description": "Embeddings for raw FeedbackItem text"}
         )
         
-        self.episode_collection = self.client.get_or_create_collection(
+        self._episode_collection = self._client.get_or_create_collection(
             name="episode_embeddings",
             metadata={"description": "Embeddings for structured RetrievalEpisode text"}
         )
-        
         logger.info(f"Initialized ChromaDB at {settings.CHROMA_PERSIST_DIR}")
+
+    @property
+    def feedback_collection(self):
+        self._init_db()
+        return self._feedback_collection
+        
+    @property
+    def episode_collection(self):
+        self._init_db()
+        return self._episode_collection
 
     def add_feedback_embeddings(self, ids: List[str], embeddings: List[List[float]], documents: List[str], metadatas: List[Dict[str, Any]]):
         """Batch upsert raw feedback embeddings."""
