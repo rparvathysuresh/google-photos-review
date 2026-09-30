@@ -76,7 +76,7 @@ class Settings(BaseSettings):
 
     # ── Embedding Config ──────────────────────────────────────
     EMBEDDING_MODEL: str = Field(
-        default="all-MiniLM-L6-v2",
+        default="BAAI/bge-small-en-v1.5",
         description="HuggingFace model ID for BGE embeddings"
     )
     EMBEDDING_BATCH_SIZE: int = Field(
