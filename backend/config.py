@@ -22,9 +22,8 @@ class Settings(BaseSettings):
         description="API key for Groq LLM inference (Llama 3 / Mixtral)"
     )
 
-    # ── Storage ──────────────────────────────────────────────
     DATA_DIR: str = Field(
-        default="/tmp/data" if "RAILWAY_PROJECT_ID" in __import__("os").environ else "data",
+        default="/tmp/data" if "RAILWAY_PROJECT_NAME" in __import__("os").environ or "RAILWAY_PUBLIC_DOMAIN" in __import__("os").environ else "data",
         description="Base directory for local data storage"
     )
 
@@ -37,9 +36,7 @@ class Settings(BaseSettings):
     @property
     def CHROMA_PERSIST_DIR(self) -> str:
         import os
-        # Railway volumes (NFS) cause SQLite WAL mode deadlocks in ChromaDB.
-        # We route Chroma to ephemeral local SSD /tmp on Railway by default.
-        if os.getenv("RAILWAY_PROJECT_ID"):
+        if os.getenv("RAILWAY_PROJECT_NAME") or os.getenv("RAILWAY_PUBLIC_DOMAIN"):
             return "/tmp/chroma"
         return f"{self.DATA_DIR}/chroma"
 
