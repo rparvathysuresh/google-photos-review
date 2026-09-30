@@ -1,7 +1,7 @@
 import logging
 from typing import List, Dict, Any
 
-from sentence_transformers import SentenceTransformer
+
 
 from backend.config import settings
 from backend.db.vector_store import vector_store
@@ -14,9 +14,16 @@ class EmbeddingService:
     """Service to generate and store embeddings."""
     
     def __init__(self):
-        logger.info(f"Loading embedding model: {settings.EMBEDDING_MODEL}")
-        self.model = SentenceTransformer(settings.EMBEDDING_MODEL)
-        logger.info("Embedding model loaded.")
+        self._model = None
+
+    @property
+    def model(self):
+        if self._model is None:
+            logger.info(f"Loading embedding model: {settings.EMBEDDING_MODEL}")
+            from sentence_transformers import SentenceTransformer
+            self._model = SentenceTransformer(settings.EMBEDDING_MODEL)
+            logger.info("Embedding model loaded.")
+        return self._model
 
     def embed_feedback_batch(self, items: List[FeedbackItem]):
         """Generate and store embeddings for a batch of FeedbackItems."""
