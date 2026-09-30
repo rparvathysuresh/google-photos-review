@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     )
 
     DATA_DIR: str = Field(
-        default="/tmp/data" if "RAILWAY_PROJECT_NAME" in __import__("os").environ or "RAILWAY_PUBLIC_DOMAIN" in __import__("os").environ else "data",
+        default="data",
         description="Base directory for local data storage"
     )
 
@@ -35,9 +35,6 @@ class Settings(BaseSettings):
     # ── Vector Store ──────────────────────────────────────────
     @property
     def CHROMA_PERSIST_DIR(self) -> str:
-        import os
-        if os.getenv("RAILWAY_PROJECT_NAME") or os.getenv("RAILWAY_PUBLIC_DOMAIN"):
-            return "/tmp/chroma"
         return f"{self.DATA_DIR}/chroma"
 
     # ── Optional: Source Adapter Credentials ──────────────────

@@ -29,10 +29,9 @@ frontend/.vite/
 
 # ── Data & Storage ───────────────────────────
 data/raw/
-data/chroma/
-*.db
-*.sqlite
-*.sqlite3
+# We are committing data/chroma/ and *.db for the invigilator demo out-of-the-box!
+*-shm
+*-wal
 
 # ── IDE ──────────────────────────────────────
 .vscode/
