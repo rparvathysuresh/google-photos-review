@@ -1,1 +1,44 @@
--r backend/requirements.txt
+# ──────────────────────────────────────────────
+# Backend Dependencies
+# AI-Powered Photo Retrieval Discovery Engine
+# ──────────────────────────────────────────────
+
+# Web framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+
+# Database
+sqlalchemy>=2.0.0
+
+# Vector store
+chromadb>=0.5.0
+
+# LLM (Groq)
+groq>=0.9.0
+
+# Embeddings (BGE)
+sentence-transformers>=3.0.0
+torch>=2.0.0
+
+# Data validation & config
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# File uploads & utilities
+python-multipart>=0.0.9
+python-dateutil>=2.8.2
+
+# Reddit Adapter
+praw>=7.7.0
+
+# YouTube Adapter
+google-api-python-client>=2.100.0
+
+# Play Store Adapter
+google-play-scraper>=1.2.0
+
+# App Store & Community Adapters
+app-store-scraper>=0.1.1
+beautifulsoup4>=4.12.0
+requests>=2.31.0
