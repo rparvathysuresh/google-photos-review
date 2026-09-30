@@ -24,7 +24,7 @@ class Settings(BaseSettings):
 
     # ── Storage ──────────────────────────────────────────────
     DATA_DIR: str = Field(
-        default="data",
+        default="/tmp/data" if "RAILWAY_PROJECT_ID" in __import__("os").environ else "data",
         description="Base directory for local data storage"
     )
 
