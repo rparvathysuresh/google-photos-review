@@ -21,16 +21,16 @@ Since this project consists of a FastAPI backend and a Vite+React frontend, and 
 
 1. **Create Project**: Go to the Railway dashboard and create a new project from your GitHub repository (`rparvathysuresh/google-photos-review`).
 2. **Monorepo Setup**: Railway will scan the repository. We will manually add two services from the same repo:
-   - Service 1: **Backend** (Root Directory: `/backend`)
+   - Service 1: **Backend** (Root Directory: `/`)
    - Service 2: **Frontend** (Root Directory: `/frontend`)
 
 ---
 
 ## 3. Backend Service Configuration (FastAPI)
 
-1. **Root Directory**: Set to `/backend`.
-2. **Build Command**: Railway's Nixpacks will automatically detect Python and use `requirements.txt`.
-3. **Start Command**: `python -m uvicorn main:app --host 0.0.0.0 --port $PORT`
+1. **Root Directory**: Set to `/` (the root of the repository).
+2. **Build Command**: Railway's Nixpacks will automatically detect Python via the root `requirements.txt`.
+3. **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
 4. **Environment Variables**:
    - `GROQ_API_KEY`: Add your API key.
    - `PORT`: `8000` (Railway will automatically assign this).
