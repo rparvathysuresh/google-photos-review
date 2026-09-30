@@ -36,6 +36,11 @@ class Settings(BaseSettings):
     # ── Vector Store ──────────────────────────────────────────
     @property
     def CHROMA_PERSIST_DIR(self) -> str:
+        import os
+        # Railway volumes (NFS) cause SQLite WAL mode deadlocks in ChromaDB.
+        # We route Chroma to ephemeral local SSD /tmp on Railway by default.
+        if os.getenv("RAILWAY_PROJECT_ID"):
+            return "/tmp/chroma"
         return f"{self.DATA_DIR}/chroma"
 
     # ── Optional: Source Adapter Credentials ──────────────────
