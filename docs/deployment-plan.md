@@ -30,7 +30,7 @@ Since this project consists of a FastAPI backend and a Vite+React frontend, and 
 
 1. **Root Directory**: Set to `/` (the root of the repository).
 2. **Build Command**: Railway's Nixpacks will automatically detect Python via the root `requirements.txt`.
-3. **Start Command**: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+3. **Start Command**: `python run.py`
 4. **Environment Variables**:
    - `GROQ_API_KEY`: Add your API key.
    - `PORT`: `8000` (Railway will automatically assign this).
