@@ -12,7 +12,7 @@ from backend.models.episode import RetrievalEpisode
 from backend.services.rag.query_engine import query_engine
 from backend.services.clustering.clusterer import clusterer
 from backend.services.rag.embeddings import embedding_service
-from backend.services.extraction.llm_extractor import extract_episodes_from_batch
+from backend.services.extraction.extractor import EpisodeExtractor
 from backend.services.ingestion.appstore_adapter import AppStoreAdapter
 
 # Configure Streamlit page
@@ -69,7 +69,8 @@ if st.sidebar.button("🚀 Re-Initialize Data"):
             
             # 4. Extract Episodes
             st.info(f"Extracting structured episodes from {len(items)} reviews using Groq...")
-            extract_episodes_from_batch(items, db)
+            extractor = EpisodeExtractor(db)
+            extractor.process_batch(batch_size=len(items))
             
             # 5. Embed Episodes & Cluster
             episodes = db.query(RetrievalEpisode).all()
