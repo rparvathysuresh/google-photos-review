@@ -41,4 +41,4 @@ google-play-scraper>=1.2.0
 # App Store & Community Adapters
 app-store-scraper>=0.1.1
 beautifulsoup4>=4.12.0
-requests>=2.31.0
+requests
