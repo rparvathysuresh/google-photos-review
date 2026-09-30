@@ -6,8 +6,7 @@ import logging
 from typing import List, Dict, Any, Optional
 from datetime import datetime, timezone
 import dateutil.parser
-
-from app_store_scraper import AppStore
+import requests
 
 from backend.models.feedback import FeedbackItem, SourceType, ExtractionStatus
 from backend.services.ingestion.base_adapter import BaseAdapter
@@ -17,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class AppStoreAdapter(BaseAdapter):
     """
-    Adapter for scraping Google Photos reviews from the Apple App Store.
+    Adapter for scraping Google Photos reviews from the Apple App Store via iTunes RSS feed.
     """
 
     def fetch_data(
@@ -34,25 +33,51 @@ class AppStoreAdapter(BaseAdapter):
         """
         raw_items = []
         try:
-            logger.info(f"Fetching {limit} reviews for {app_name} from App Store ({country})...")
+            logger.info(f"Fetching reviews for {app_name} from App Store ({country})...")
             
-            app = AppStore(country=country, app_name=app_name, app_id=app_id)
-            app.review(how_many=limit)
-            
+            # Simple iTunes RSS endpoint (paginated up to 10 pages, 50 results each)
+            pages = (limit // 50) + 1
+            fetched = 0
             keywords = ['search', 'find', 'retrieve', 'look for', 'missing', 'lost', 'organize', 'ocr', 'recognize']
             
-            for review in app.reviews:
-                content = review.get('review', '').lower()
+            for page in range(1, min(pages + 1, 11)):
+                url = f"https://itunes.apple.com/{country}/rss/customerreviews/page={page}/id={app_id}/sortby=mostrecent/json"
+                resp = requests.get(url, timeout=10)
+                if resp.status_code != 200:
+                    break
+                    
+                data = resp.json()
+                entries = data.get("feed", {}).get("entry", [])
                 
-                # Check if any keyword is in the review content
-                if any(kw in content for kw in keywords):
-                    raw_items.append(review)
+                for entry in entries:
+                    if "author" not in entry:
+                        continue
+                        
+                    content = entry.get("content", {}).get("label", "")
+                    title = entry.get("title", {}).get("label", "")
+                    author = entry.get("author", {}).get("name", {}).get("label", "unknown")
+                    rating = entry.get("im:rating", {}).get("label", "0")
+                    updated = entry.get("updated", {}).get("label", "")
+                    
+                    full_text = f"{title} {content}".lower()
+                    if any(kw in full_text for kw in keywords):
+                        raw_items.append({
+                            "review": content,
+                            "title": title,
+                            "author": author,
+                            "rating": int(rating) if rating.isdigit() else 0,
+                            "date": updated,
+                        })
+                    fetched += 1
+                
+                if fetched >= limit:
+                    break
                     
         except Exception as e:
             logger.error(f"App Store scraping error: {e}")
             raise ValueError(f"App Store scraping error: {e}")
             
-        logger.info(f"Fetched {len(app.reviews)} total reviews, found {len(raw_items)} relevant to retrieval.")
+        logger.info(f"Fetched {fetched} total reviews, found {len(raw_items)} relevant to retrieval.")
         return raw_items
 
     def parse(self, raw_data: List[Dict[str, Any]]) -> List[FeedbackItem]:
@@ -76,15 +101,12 @@ class AppStoreAdapter(BaseAdapter):
 
             platform_metadata = {
                 "rating": raw.get("rating"),
-                "is_edited": raw.get("isEdited"),
                 "title": raw.get("title")
             }
 
-            # Generate a pseudo-thread_id from author + date since App Store doesn't give a direct review ID
-            author = raw.get("userName", "unknown_author")
+            author = raw.get("author", "unknown_author")
             thread_id = f"appstore_{author}_{raw.get('date')}"
             
-            # Pseudo URL
             source_url = f"https://apps.apple.com/us/app/google-photos/id962164605#review-{author}"
 
             item = FeedbackItem(
