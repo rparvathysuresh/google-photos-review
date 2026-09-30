@@ -5,6 +5,8 @@
 
 # Streamlit UI
 streamlit>=1.32.0
+pandas>=2.0.0
+plotly>=5.18.0
 
 # Web framework
 fastapi>=0.110.0
