@@ -3,6 +3,9 @@
 # AI-Powered Photo Retrieval Discovery Engine
 # ──────────────────────────────────────────────
 
+# Streamlit UI
+streamlit>=1.32.0
+
 # Web framework
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
